@@ -23,6 +23,10 @@ public class AuthController {
         newUser.setEmail(user.getEmail());
         newUser.setFullName(user.getFullName());
 
+        User isEmailExist = userRepository.findByEmail(user.getEmail());
+        if(isEmailExist != null){
+            throw new Exception("user already used with another account");
+        }
         User saveUser = userRepository.save(newUser);
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
 
