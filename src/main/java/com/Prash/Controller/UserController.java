@@ -3,6 +3,7 @@ package com.Prash.Controller;
 import com.Prash.Domain.VerificationType;
 import com.Prash.Request.ForgotPasswordTokenRequest;
 import com.Prash.Request.ResetPasswordRequest;
+import com.Prash.Response.ApiResponse;
 import com.Prash.Response.AuthResponse;
 import com.Prash.model.ForgotPasswordToken;
 import com.Prash.model.User;
@@ -100,7 +101,7 @@ public class UserController {
     }
 
     @PatchMapping("/auth/users/reset-password/verify-otp")
-    public ResponseEntity<User> resetPasswordOtp(
+    public ResponseEntity<ApiResponse> resetPasswordOtp(
             @RequestParam String id,
             @RequestBody ResetPasswordRequest req,
             @RequestHeader("Authorization") String jwt) throws Exception {
@@ -110,9 +111,11 @@ public class UserController {
 
         if(isVerified){
             userService.updatePassword(forgotPasswordToken.getUser(),req.getPassword());
-            Api
-
+            ApiResponse res = new ApiResponse();
+            res.setMessage("password update successfully");
+            return new ResponseEntity<>(res, HttpStatus.ACCEPTED);
         }
+        throw new Exception("Wrong OTP");
     }
 
 
